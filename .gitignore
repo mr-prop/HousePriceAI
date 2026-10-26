@@ -24,3 +24,11 @@ Thumbs.db
 build/
 dist/
 *.egg-info/
+
+#mlflow
+mlflow.db
+mlruns/
+mlartifacts/
+
+#vscode
+.vscode
