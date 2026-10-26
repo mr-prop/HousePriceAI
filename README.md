@@ -23,12 +23,15 @@ The prediction model is served using FastAPI and the user interface is built wit
 
 ## Features
 
-- Data preprocessing
+- Data Preprocessing
 - Feature Engineering
 - Model Training
 - Model Evaluation
+- **Experiment Tracking & Model Metrics Logging with MLflow**
+- **Data and Model Versioning with DVC**
+- **Reproducible Machine Learning Pipelines**
 - FastAPI REST API
-- Streamlit Dashboard
+- Streamlit Interactive Dashboard
 - Docker Support
 
 ## Technologies
@@ -41,6 +44,8 @@ The prediction model is served using FastAPI and the user interface is built wit
 - FastAPI
 - Streamlit
 - Docker
+- mlflow
+- dvc
 
 ## Machine Learning Pipeline
 
@@ -49,32 +54,34 @@ The prediction model is served using FastAPI and the user interface is built wit
 - Train Test Split
 - Model Training
 - Model Evaluation
+- Model Experiment
 - Model Saving
 
 ## Model Performance
 
-R² Score
+The Linear Regression model achieved strong predictive performance on the test dataset, with an **R² score of 97.45%**.
 
-0.97
+**Evaluation Metrics:**
+- **R² Score:** 0.9745
+- **Mean Absolute Error (MAE):** 16,769.56
+- **Root Mean Squared Error (RMSE):** 20,446.03
 
-MAE
+These results indicate that the model explains approximately 97.45% of the variance in house prices, with an average absolute prediction error of approximately 16,770 price units.
 
-16769
-
-MSE
-
-4180
-
-In my model, it can predict 97% correctly and has an average of 16,000 errors, which indicates a very good and high performance of the model.
+The model demonstrates promising performance in predicting house prices on unseen test data. However, prediction accuracy may vary depending on the characteristics of individual properties.
 
 
-## API Endpoints
+## API Usage
 
-POST /predict
+The FastAPI REST API allows users to predict house prices by submitting property features to the trained Linear Regression model.
 
-GET /data
+### Predict House Price
 
-### Request a sample
+**Endpoint:** `POST /api/v1/predict/`
+
+Send a JSON request containing the following house features:
+
+**Sample Request**
 ```json
 {
   "Square_Feet": 199.66,
@@ -89,14 +96,18 @@ GET /data
   "Distance_to_Center": 8.28
 }
 ```
-### Response a sample
 
+**Sample Response**
 ```json
 {
+  "status": "success",
   "prediction": 590848.3012306448
 }
 ```
-We give the features of a house to the trained model and the model returns the price of the house to us.
+
+The API validates the input features, passes them to the trained model, and returns the predicted house price as a JSON response.
+
+You can explore and test the API endpoints interactively through the FastAPI Swagger UI at `/docs`.
 
 
 
@@ -151,5 +162,6 @@ We used Streamlit to build dashboards and a web app to showcase machine learning
 Your Name-> amir mohammad abdol shaikhy
 
 GitHub-> [mr-prop](https://github.com/mr-prop)
+DagsHub-> [amir_abd_shai](https://dagshub.com/amir_abd_shai)
 
 Email-> amirmohammadshai@gmail.com
