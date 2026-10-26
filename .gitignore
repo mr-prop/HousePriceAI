@@ -31,4 +31,4 @@ mlruns/
 mlartifacts/
 
 #vscode
-.vscode
+.vscode/
