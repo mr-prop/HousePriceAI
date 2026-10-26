@@ -1,19 +1,39 @@
-from pydantic_settings import BaseSettings
+from pathlib import Path
+
+import yaml
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Project root directory
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+# Load params.yaml from project root
+PARAMS_PATH = BASE_DIR / "params.yaml"
+
+with PARAMS_PATH.open("r", encoding="utf-8") as file:
+    params = yaml.safe_load(file)
+
+model = params["model"]
+
 
 class Settings(BaseSettings):
+    # Model path from params.yaml
+    MODEL_PATH: str = str(
+        (BASE_DIR / model["output"]).resolve()
+        if not Path(model["output"]).is_absolute()
+        else Path(model["output"])
+    )
 
-    # model
-    MODEL_PATH:str="model/model_regression.joblib"
-    # model version
-    API_VERSION:str="v1"
-    # name
-    PROJECT_NAME:str="House Price Prediction API"
-    # url
-    ALLOWED_HOSTS:list[str]=[
+    API_VERSION: str = "v1"
+    PROJECT_NAME: str = "House Price Prediction API"
+
+    ALLOWED_HOSTS: list[str] = [
         "http://localhost:8000"
     ]
-    # confing model to .env
-    class Config:
-        env_file=".env"
 
-settings=Settings()
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore"
+    )
+
+
+settings = Settings()

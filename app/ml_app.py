@@ -81,10 +81,7 @@ button_prediction = st.sidebar.button("Prediction")
 
 if button_prediction:
 
-    Has_Garden = int(Has_Garden)
-    Has_Pool = int(Has_Pool)
-
-    x = {
+    input_data = {
         "Square_Feet": float(Square_Feet),
         "Num_Bedrooms": int(Num_Bedrooms),
         "Num_Bathrooms": int(Num_Bathrooms),
@@ -97,38 +94,42 @@ if button_prediction:
         "Distance_to_Center": float(Distance_to_Center)
     }
 
-    response_post = requests.post(
-    "http://api:8000/api/v1/predict/",
-    json=x
-)
-    response_get = requests.get(
-    "http://api:8000/api/v1/predict/get/"
-)
-    
+    try:
+        response_post = requests.post(
+            "http://api:8000/api/v1/predict/",
+            json=input_data,
+            timeout=15
+        )
 
-    if response_get.status_code == 200:
-        house = response_get.json()["data"][0]
+        response_post.raise_for_status()
+        result = response_post.json()
 
-        col1 , col2 = st.columns(2)
+        # Display the exact input selected by the user
+        col1, col2 = st.columns(2)
+
         with col1:
-            st.write(f"Square Feet: {house['Square_Feet']:,.2f}")
-            st.write(f"Bedrooms: {house['Num_Bedrooms']}")
-            st.write(f"Bathrooms: {house['Num_Bathrooms']}")
-            st.write(f"Num Floors: {house['Num_Floors']}")
-            st.write(f"Year Built: {house['Year_Built']}")
+            st.write(f"Square Feet: {input_data['Square_Feet']:,.2f}")
+            st.write(f"Bedrooms: {input_data['Num_Bedrooms']}")
+            st.write(f"Bathrooms: {input_data['Num_Bathrooms']}")
+            st.write(f"Num Floors: {input_data['Num_Floors']}")
+            st.write(f"Year Built: {input_data['Year_Built']}")
 
         with col2:
-            st.write(f"Has Garden: {house['Has_Garden']}")
-            st.write(f"Has Pool: {house['Has_Pool']}")
-            st.write(f"Garage Size: {house['Garage_Size']}")
-            st.write(f"Location Score: {house['Location_Score']:,.2f}")
-            st.write(f"Distance to Center: {house['Distance_to_Center']:,.3f}")
+            st.write(f"Has Garden: {input_data['Has_Garden']}")
+            st.write(f"Has Pool: {input_data['Has_Pool']}")
+            st.write(f"Garage Size: {input_data['Garage_Size']}")
+            st.write(f"Location Score: {input_data['Location_Score']:.2f}")
+            st.write(
+                f"Distance to Center: "
+                f"{input_data['Distance_to_Center']:.3f}"
+            )
 
-    else:
-        st.error("***Invalid input***")
+        st.success(
+            f"price prediction-> ${float(result['prediction']):,.2f}"
+        )
 
-    if response_post.status_code == 200:
-        price_house = response_post.json()
-        st.success(f"price prediction-> ${price_house['prediction']:,.2f}")
-    else:
-        st.error("***Unsuccessful prediction***")
+    except requests.exceptions.RequestException as e:
+        st.error(f"Prediction request failed: {e}")
+
+    except (KeyError, ValueError, TypeError):
+        st.error("Invalid response received from prediction API.")

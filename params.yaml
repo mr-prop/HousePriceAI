@@ -1,0 +1,17 @@
+eda:
+  input: ../data/real_estate_dataset.csv
+  output: ../data/real_estate_dataset2.csv
+
+model:
+  input: ../data/real_estate_dataset2.csv
+  output: model/model_regression.joblib
+  parameter_model:
+    RandomForest:
+      n_estimators: [100 , 200]
+      max_depth: [2 , 3 , 5 , 7 , 10 , null]
+      min_samples_split: [2 , 5 , 10 , 15 , 20]
+      min_samples_leaf: [1 , 2 , 3 , 5 , 8 , 10]
+    DecisionTree:
+      max_depth: [2 , 3 , 5 , 7 , 10 , null]
+      min_samples_split: [2 , 5 , 10 , 15 , 20]
+      min_samples_leaf: [1 , 2 , 3 , 5 , 8 , 10]
